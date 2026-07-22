@@ -1,0 +1,24 @@
+{
+  "name": "real-estate-price",
+  "version": "1.0.0",
+  "private": true,
+  "description": "查詢臺灣住宅房地實價登錄成交行情，整理全部成交案例、分建物型態行情及物件開價初步比較。",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "postinstall": "playwright install chromium",
+    "install-browser": "playwright install chromium",
+    "query": "node scripts/query-lvr.js",
+    "analyze": "node scripts/analyze-transactions.js",
+    "parse-address": "node scripts/parse-address.js",
+    "test": "node tests/test-query.js"
+  },
+  "dependencies": {
+    "playwright": "^1.61.1",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "license": "UNLICENSED"
+}

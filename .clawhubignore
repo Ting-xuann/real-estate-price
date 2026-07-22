@@ -1,0 +1,39 @@
+# Version-control metadata
+.git/
+.github/
+
+# npm dependencies (installed by the target environment)
+node_modules/
+
+# Runtime query and analysis output
+debug/
+
+# Environment variables and local configuration
+.env
+.env.*
+!.env.example
+
+# Tests are useful in the Git repository but unnecessary at runtime
+tests/
+test-results/
+playwright-report/
+blob-report/
+
+# Logs and coverage
+*.log
+coverage/
+.nyc_output/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
