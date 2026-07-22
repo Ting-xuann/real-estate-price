@@ -1,7 +1,7 @@
 ---
 name: real-estate-price
 description: 查詢臺灣住宅房地實價登錄成交行情；適用於地址、社區、路段或行政區的全部成交案例、分建物型態行情、嚴格與參考行情，以及物件開價的初步比較。
-version: 1.0.0
+version: 1.0.1
 metadata:
   openclaw:
     requires:
@@ -98,6 +98,55 @@ metadata:
 
 任一步驟未完成時，不得宣告查詢任務完成。
 
+## 平台工具呼叫規則
+
+在提供 `run_script` 工具的網站平台中，所有 JavaScript 程式都只能透過 `run_script` 執行。
+
+只能呼叫工具：
+
+```text
+run_script
+```
+
+不得自行建立或呼叫下列不存在的工具名稱：
+
+```text
+run_parse_address
+run_query_lvr
+run_analyze_transactions
+```
+
+每次呼叫 `run_script` 時都必須提供非空的 `script` 欄位；`script` 的值必須是完整、可直接執行的 Node.js 命令。例如：
+
+```json
+{
+  "script": "node \"{baseDir}/scripts/parse-address.js\" \"新北市中和區景平路\""
+}
+```
+
+```json
+{
+  "script": "node \"{baseDir}/scripts/query-lvr.js\" --json '<query-json>'"
+}
+```
+
+```json
+{
+  "script": "node \"{baseDir}/scripts/analyze-transactions.js\" --input \"{baseDir}/debug/raw.json\" --target '<target-json>'"
+}
+```
+
+上述 JSON 表示工具參數，不是要執行的腳本內容。實際呼叫時：
+
+1. 工具名稱固定使用 `run_script`。
+2. 將完整 Node.js 命令放入 `script`。
+3. 將 `<query-json>` 與 `<target-json>` 替換成本次合法 JSON。
+4. 不得把腳本檔名轉換成新的工具名稱。
+5. 工具呼叫失敗時，不得用空白 `script` 重試。
+6. 必須先讀取並理解實際錯誤，再使用完整 `script` 修正重試。
+
+若平台沒有 `run_script`，但提供功能相同的命令執行工具，使用平台實際存在的工具；不得臆造工具名稱。
+
 ## 解析使用者輸入
 
 將自然語言解析為可用條件，包括：
@@ -119,6 +168,8 @@ metadata:
 node "{baseDir}/scripts/parse-address.js" "<使用者輸入>"
 ```
 
+在網站平台中，將上述完整命令放入 `run_script.script`，不得呼叫 `run_parse_address`。
+
 只提供「中山路 100 號」等無法確認縣市及行政區的地址時，要求補充必要資訊。若缺少欄位不影響基本查詢，可使用既定預設值，但必須在報告中說明。
 
 判斷物件開價時，盡量取得建物型態、面積、屋齡、樓層、車位、社區名稱及開價。資料不足時只能提供初步比較。
@@ -130,6 +181,8 @@ node "{baseDir}/scripts/parse-address.js" "<使用者輸入>"
 ```bash
 node "{baseDir}/scripts/query-lvr.js" --json "<query-json>"
 ```
+
+在網站平台中，將上述完整命令放入 `run_script.script`，不得呼叫 `run_query_lvr`。
 
 範例：
 
@@ -207,6 +260,8 @@ node "{baseDir}/scripts/query-lvr.js" --json "<query-json>"
 ```bash
 node "{baseDir}/scripts/analyze-transactions.js" --input "{baseDir}/debug/raw.json" --target "<target-json>"
 ```
+
+在網站平台中，將上述完整命令放入 `run_script.script`。不得呼叫 `run_analyze_transactions`，因為它不是平台已註冊的工具。
 
 基本 target：
 

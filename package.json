@@ -1,6 +1,6 @@
 {
   "name": "real-estate-price",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "查詢臺灣住宅房地實價登錄成交行情，整理全部成交案例、分建物型態行情及物件開價初步比較。",
   "type": "module",
